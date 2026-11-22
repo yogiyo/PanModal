@@ -171,6 +171,22 @@ open class PanModalPresentationController: UIPresentationController {
 
     // MARK: - Lifecycle
 
+    override public var frameOfPresentedViewInContainerView: CGRect {
+        guard let containerView = containerView else { return .zero }
+        return containerView.bounds.inset(by: UIEdgeInsets(top: 0, left: containerView.safeAreaInsets.left, bottom: 0, right: containerView.safeAreaInsets.right))
+    }
+
+    override public func containerViewDidLayoutSubviews() {
+        super.containerViewDidLayoutSubviews()
+        let frame = frameOfPresentedViewInContainerView
+        panContainerView.frame.origin.x = frame.minX
+        panContainerView.frame.size.width = frame.width
+        presentedViewController.view.frame.size.width = frame.width
+        if presentable?.shouldRoundTopCorners == true {
+            addRoundedCorners(to: presentedView)
+        }
+    }
+
     override public func containerViewWillLayoutSubviews() {
         super.containerViewWillLayoutSubviews()
         configureViewLayout()
@@ -402,8 +418,7 @@ private extension PanModalPresentationController {
      */
     func adjustPresentedViewFrame() {
 
-        guard let frame = containerView?.frame
-            else { return }
+        let frame = frameOfPresentedViewInContainerView
 
         let adjustedSize = CGSize(width: frame.size.width, height: frame.size.height - anchoredYPosition)
         let panFrame = panContainerView.frame
