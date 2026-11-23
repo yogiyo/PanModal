@@ -418,6 +418,7 @@ private extension PanModalPresentationController {
      */
     func adjustPresentedViewFrame() {
 
+        guard containerView != nil else { return }
         let frame = frameOfPresentedViewInContainerView
 
         let adjustedSize = CGSize(width: frame.size.width, height: frame.size.height - anchoredYPosition)
@@ -841,7 +842,7 @@ private extension PanModalPresentationController {
             else { return }
 
         let yOffset = scrollView.contentOffset.y
-        let presentedSize = containerView?.frame.size ?? .zero
+        let presentedSize = frameOfPresentedViewInContainerView.size
 
         /**
          Decrease the view bounds by the y offset so the scroll view stays in place
