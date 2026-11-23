@@ -53,12 +53,24 @@ public class DimmedView: UIView {
         return UITapGestureRecognizer(target: self, action: #selector(didTapView))
     }()
 
+    private let dimLayerView = UIView()
+
     // MARK: - Initializers
 
     init(dimColor: UIColor = UIColor.black.withAlphaComponent(0.7)) {
         super.init(frame: .zero)
         alpha = 0.0
-        backgroundColor = dimColor
+        backgroundColor = .clear
+        dimLayerView.backgroundColor = dimColor
+        dimLayerView.isUserInteractionEnabled = false
+        dimLayerView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(dimLayerView)
+        NSLayoutConstraint.activate([
+            dimLayerView.topAnchor.constraint(equalTo: topAnchor),
+            dimLayerView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            dimLayerView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            dimLayerView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
+        ])
         addGestureRecognizer(tapGesture)
     }
 
